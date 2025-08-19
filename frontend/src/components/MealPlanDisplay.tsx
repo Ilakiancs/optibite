@@ -18,7 +18,7 @@ export function MealPlanDisplay({ mealPlan }: MealPlanDisplayProps) {
       case 'dinner':
         return '🌙'
       default:
-        return '🍽️'
+        return 'Meal'
     }
   }
 
