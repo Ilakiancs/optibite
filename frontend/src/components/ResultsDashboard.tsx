@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { UserData, MealPlan } from '@/lib/utils'
+import { UserProfile as UserData, MealPlan } from '@/lib/types'
 import { 
   Activity, 
   Target, 
@@ -46,27 +46,27 @@ export function ResultsDashboard({
       case 'breakfast': return '🌅'
       case 'lunch': return '☀️'
       case 'dinner': return '🌙'
-      default: return '🍽️'
+      default: return 'Meal'
     }
   }
 
   const meals = [
-    { name: 'Breakfast', items: mealPlan.breakfast_items, icon: getMealIcon('breakfast') },
-    { name: 'Lunch', items: mealPlan.lunch_items, icon: getMealIcon('lunch') },
-    { name: 'Dinner', items: mealPlan.dinner_items, icon: getMealIcon('dinner') }
+    { name: 'Breakfast', items: mealPlan.breakfast_items || [], icon: getMealIcon('breakfast') },
+    { name: 'Lunch', items: mealPlan.lunch_items || [], icon: getMealIcon('lunch') },
+    { name: 'Dinner', items: mealPlan.dinner_items || [], icon: getMealIcon('dinner') }
   ]
 
   return (
     <div className="w-full max-w-6xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center rounded-full border px-3 py-1 text-sm bg-muted/50">
+        <div className="inline-flex items-center rounded-full border px-3 py-1 text-sm bg-gray-100">
           <Target className="mr-2 h-3 w-3" />
           Your Personalized Plan is Ready
         </div>
         <h2 className="text-3xl md:text-4xl font-bold">
           Welcome to Your Nutrition Dashboard
-          {userData.name && <span className="block text-xl text-muted-foreground mt-2">Hello, {userData.name}!</span>}
+          {userData.name && <span className="block text-xl text-gray-500 mt-2">Hello, {userData.name}!</span>}
         </h2>
       </div>
 
@@ -75,33 +75,33 @@ export function ResultsDashboard({
         <Card className="card-hover">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Base Metabolic Rate</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
+            <Activity className="h-4 w-4 text-gray-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{Math.round(bmrData.bmr)}</div>
-            <p className="text-xs text-muted-foreground">calories at rest</p>
+            <p className="text-xs text-gray-500">calories at rest</p>
           </CardContent>
         </Card>
 
         <Card className="card-hover">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Daily Target</CardTitle>
-            <Target className="h-4 w-4 text-muted-foreground" />
+            <Target className="h-4 w-4 text-gray-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{Math.round(bmrData.daily_calories)}</div>
-            <p className="text-xs text-muted-foreground">total daily calories</p>
+            <p className="text-xs text-gray-500">total daily calories</p>
           </CardContent>
         </Card>
 
         <Card className="card-hover">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Plan Calories</CardTitle>
-            <Utensils className="h-4 w-4 text-muted-foreground" />
+            <Utensils className="h-4 w-4 text-gray-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{mealPlan.total_calories}</div>
-            <p className="text-xs text-muted-foreground">from your meal plan</p>
+            <div className="text-2xl font-bold">{mealPlan.total_calories || 0}</div>
+            <p className="text-xs text-gray-500">from your meal plan</p>
           </CardContent>
         </Card>
       </div>
@@ -129,19 +129,19 @@ export function ResultsDashboard({
               <CardContent className="space-y-3">
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div>
-                    <span className="text-muted-foreground">Gender:</span>
+                    <span className="text-gray-500">Gender:</span>
                     <span className="ml-2 font-medium">{userData.gender}</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Age:</span>
+                    <span className="text-gray-500">Age:</span>
                     <span className="ml-2 font-medium">{userData.age} years</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Height:</span>
+                    <span className="text-gray-500">Height:</span>
                     <span className="ml-2 font-medium">{userData.height} cm</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Weight:</span>
+                    <span className="text-gray-500">Weight:</span>
                     <span className="ml-2 font-medium">{userData.weight} kg</span>
                   </div>
                 </div>
@@ -159,13 +159,13 @@ export function ResultsDashboard({
               <CardContent>
                 <div className="grid grid-cols-2 gap-4 text-center">
                   <div className="space-y-1">
-                    <div className="text-2xl font-bold text-green-600">{mealPlan.total_calories}</div>
-                    <div className="text-xs text-muted-foreground">Total Calories</div>
+                    <div className="text-2xl font-bold text-green-600">{mealPlan.total_calories || 0}</div>
+                    <div className="text-xs text-gray-500">Total Calories</div>
                   </div>
-                  {Object.entries(mealPlan.breakdown).map(([nutrient, value]) => (
+                  {mealPlan.breakdown && Object.entries(mealPlan.breakdown).map(([nutrient, value]) => (
                     <div key={nutrient} className="space-y-1">
                       <div className="text-2xl font-bold text-blue-600">{value}</div>
-                      <div className="text-xs text-muted-foreground capitalize">{nutrient}</div>
+                      <div className="text-xs text-gray-500 capitalize">{nutrient}</div>
                     </div>
                   ))}
                 </div>
@@ -187,7 +187,7 @@ export function ResultsDashboard({
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
-                    {meal.items.map((item, index) => (
+                    {meal.items && meal.items.map((item, index) => (
                       <li key={index} className="flex items-start gap-2">
                         <span className="text-primary mt-1.5 text-xs">•</span>
                         <span className="text-sm leading-relaxed">{item}</span>
@@ -223,7 +223,7 @@ export function ResultsDashboard({
                     <CardTitle className="capitalize">{meal} Inspiration</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground leading-relaxed">{description}</p>
+                    <p className="text-gray-500 leading-relaxed">{description}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -255,7 +255,7 @@ export function ResultsDashboard({
                   <CardContent className="pt-6">
                     <div className="space-y-3">
                       <div className="flex flex-wrap gap-2">
-                        <span className="text-sm text-muted-foreground">Replace:</span>
+                        <span className="text-sm text-gray-500">Replace:</span>
                         {suggestion.items_to_replace?.map((item: string, i: number) => (
                           <span key={i} className="bg-destructive/10 text-destructive px-2 py-1 rounded text-sm">
                             {item}
@@ -263,15 +263,15 @@ export function ResultsDashboard({
                         ))}
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        <span className="text-sm text-muted-foreground">With:</span>
+                        <span className="text-sm text-gray-500">With:</span>
                         {suggestion.replacements?.map((item: string, i: number) => (
                           <span key={i} className="bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300 px-2 py-1 rounded text-sm">
                             {item}
                           </span>
                         ))}
                       </div>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{suggestion.rationale}</p>
-                      <div className="text-xs text-muted-foreground">
+                      <p className="text-sm text-gray-500 leading-relaxed">{suggestion.rationale}</p>
+                      <div className="text-xs text-gray-500">
                         Calorie impact: {suggestion.calorie_delta > 0 ? '+' : ''}{suggestion.calorie_delta} calories
                       </div>
                     </div>
