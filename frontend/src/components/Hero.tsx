@@ -17,7 +17,7 @@ export function Hero({ onGetStarted }: HeroProps) {
       <div className="relative container">
         <div className="max-w-4xl mx-auto text-center space-y-8">
           {/* Badge */}
-          <div className="inline-flex items-center rounded-full border px-3 py-1 text-sm bg-muted/50">
+          <div className="inline-flex items-center rounded-full border px-3 py-1 text-sm bg-gray-100">
             <Sparkles className="mr-2 h-3 w-3" />
             AI-Powered Nutrition Planning
           </div>
