@@ -8,7 +8,7 @@ export function Header() {
   const { theme, setTheme } = useTheme()
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center space-x-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground text-sm font-bold">
@@ -18,13 +18,13 @@ export function Header() {
         </div>
         
         <nav className="hidden md:flex items-center space-x-6 text-sm">
-          <a href="#features" className="transition-colors hover:text-foreground/80 text-foreground/60">
+          <a href="#features" className="transition-colors hover:text-gray-800 text-gray-600">
             Features
           </a>
-          <a href="#how-it-works" className="transition-colors hover:text-foreground/80 text-foreground/60">
+          <a href="#how-it-works" className="transition-colors hover:text-gray-800 text-gray-600">
             How it Works
           </a>
-          <a href="#about" className="transition-colors hover:text-foreground/80 text-foreground/60">
+          <a href="#about" className="transition-colors hover:text-gray-800 text-gray-600">
             About
           </a>
         </nav>
