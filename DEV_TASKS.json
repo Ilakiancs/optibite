@@ -1,0 +1,260 @@
+{
+  "project": "OptiBite AI-Meal-Planner",
+  "version": "1.0.0",
+  "style": "Cursor/Copilot task plan",
+  "goals": [
+    "Polish UI/UX (Tailwind + Radix) with accessibility and responsiveness",
+    "Ensure all features work end-to-end with robust validation and error handling",
+    "Tighten backend contracts, types, and testing",
+    "Improve performance, DX, and optional production features"
+  ],
+  "env": {
+    "required": [
+      "NEXT_PUBLIC_API_BASE_URL",
+      "AI_PROVIDER",
+      "GROQ_API_KEY",
+      "OPENAI_API_KEY",
+      "ANTHROPIC_API_KEY"
+    ],
+    "notes": "If AI keys are missing, app must degrade gracefully with deterministic description templates and visible banner."
+  },
+  "flags": {
+    "auth_enabled": false,
+    "persistence_enabled": false,
+    "sentry_enabled": false
+  },
+  "commands": {
+    "frontend": [
+      "yarn install",
+      "yarn dev",
+      "yarn lint",
+      "yarn typecheck",
+      "yarn test"
+    ],
+    "backend": [
+      "pip install -r requirements.txt",
+      "uvicorn simple_backend:app --reload",
+      "pytest -q"
+    ],
+    "e2e": [
+      "npx playwright install",
+      "yarn e2e"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "ui-overhaul",
+      "title": "UI/UX Overhaul with Tailwind + Radix",
+      "priority": "high",
+      "files_to_edit": [
+        "src/app/layout.tsx",
+        "src/app/page.tsx",
+        "src/components/ui/*",
+        "src/components/planner/*"
+      ],
+      "steps": [
+        "Create consistent Button, Input, Select, Textarea, Card, Tabs, Dialog, Toast, Skeleton components in src/components/ui",
+        "Implement multi-step planner (stepper, previous/next, summary) in src/app/page.tsx and src/components/planner/*",
+        "Add loading/empty/error states for all async components",
+        "Ensure responsive layout for 360, 768, 1024, 1440 widths",
+        "Add Radix Dialog for confirmations and Toast for feedback",
+        "Add keyboard focus rings, ARIA labels, and skip-to-content"
+      ],
+      "acceptance_criteria": [
+        "Lighthouse \u2265 95 for Performance/Best Practices/Accessibility on planner pages",
+        "Keyboard-only navigation supported; screen reader labels present",
+        "No layout shift during async fetch (skeletons reserve space)"
+      ]
+    },
+    {
+      "id": "validation-forms",
+      "title": "Zod + React Hook Form Validation",
+      "priority": "high",
+      "files_to_edit": [
+        "src/lib/validation.ts",
+        "src/components/planner/UserForm.tsx",
+        "src/components/planner/MealPrefsForm.tsx"
+      ],
+      "steps": [
+        "Create UserProfileSchema, MealPrefsSchema, PlannerInputSchema with Zod",
+        "Infer TypeScript types from Zod schemas",
+        "Wire schemas to React Hook Form resolvers; display inline errors",
+        "Disable submit until form is valid; show async spinner on submit"
+      ],
+      "acceptance_criteria": [
+        "Invalid fields show precise messages",
+        "Form cannot submit until valid",
+        "Successful/failed submits show toasts and reset/retain as appropriate"
+      ]
+    },
+    {
+      "id": "backend-contracts",
+      "title": "FastAPI Contracts and Models",
+      "priority": "high",
+      "files_to_edit": [
+        "simple_backend.py"
+      ],
+      "steps": [
+        "Define Pydantic request/response models mirroring frontend Zod types",
+        "Implement endpoints: POST /calculate-bmr, /generate-meal-plan, /generate-descriptions, /swap-suggestions",
+        "Return stable IDs for meals/ingredients; validate all payloads",
+        "Add descriptive HTTP 4xx/5xx messages; document with OpenAPI"
+      ],
+      "acceptance_criteria": [
+        "OpenAPI docs show accurate schemas",
+        "Frontend types match backend responses one-to-one",
+        "Network errors handled with actionable messages"
+      ]
+    },
+    {
+      "id": "react-query-state",
+      "title": "React Query Integration and Hooks",
+      "priority": "high",
+      "files_to_edit": [
+        "src/app/layout.tsx",
+        "src/lib/api.ts"
+      ],
+      "steps": [
+        "Add QueryClientProvider in layout.tsx",
+        "Create hooks: useCalculateBmr, useGenerateMealPlan, useGenerateDescriptions, useSwapSuggestions",
+        "Cache by parsed input; refetch on input change",
+        "Implement optimistic update + rollback for swaps"
+      ],
+      "acceptance_criteria": [
+        "Cache hits for identical inputs",
+        "Swaps feel instant; rollback on failure",
+        "No console errors or hydration warnings"
+      ]
+    },
+    {
+      "id": "core-features",
+      "title": "BMR/TDEE, Meal Split, AI Descriptions, Swaps",
+      "priority": "high",
+      "files_to_edit": [
+        "src/lib/types.ts",
+        "src/components/planner/MealPlanView.tsx",
+        "simple_backend.py"
+      ],
+      "steps": [
+        "Implement Mifflin-St Jeor BMR and TDEE with activity multipliers",
+        "Apply goal-based calorie adjustment (lose/maintain/gain)",
+        "Distribute calories 25/35/30/10 (breakfast/lunch/dinner/snack)",
+        "Ensure macros roughly match targets (configurable)",
+        "AI descriptions via provider in env; fallback templates if missing",
+        "Ingredient swap suggestions within \u00b110% calories/macros; 3 options"
+      ],
+      "acceptance_criteria": [
+        "End-to-end flow: inputs \u2192 BMR/TDEE \u2192 plan \u2192 descriptions \u2192 swaps",
+        "Export final plan as PDF/CSV",
+        "Graceful fallback without AI keys"
+      ]
+    },
+    {
+      "id": "env-config",
+      "title": "Environment Config and Banners",
+      "priority": "medium",
+      "files_to_edit": [
+        ".env.example",
+        "src/app/(providers)/EnvBanner.tsx",
+        "README.md"
+      ],
+      "steps": [
+        "Complete .env.example with all keys",
+        "Show visible banner if required env vars are missing (frontend)",
+        "Backend logs clear warnings and serves deterministic fallbacks"
+      ],
+      "acceptance_criteria": [
+        "App runs without AI keys using template descriptions",
+        "README explains env and fallbacks clearly"
+      ]
+    },
+    {
+      "id": "perf-dx",
+      "title": "Performance and Developer Experience",
+      "priority": "medium",
+      "files_to_edit": [
+        "next.config.mjs",
+        "src/app/*",
+        ".eslintrc.*",
+        "tsconfig.json"
+      ],
+      "steps": [
+        "Route-level code-splitting and lazy-load heavy components",
+        "Memoize expensive components; remove unnecessary state",
+        "Enable strict TypeScript; fix ESLint + Prettier issues",
+        "Add React Error Boundaries for client-only trees"
+      ],
+      "acceptance_criteria": [
+        "Smaller bundles; no hydration warnings",
+        "yarn lint and yarn typecheck pass cleanly"
+      ]
+    },
+    {
+      "id": "optional-enhancements",
+      "title": "Auth, Persistence, Monitoring, Docker (Feature-flagged)",
+      "priority": "low",
+      "files_to_edit": [
+        "src/pages/api/auth/[...nextauth].ts",
+        "prisma/schema.prisma",
+        "docker-compose.yml",
+        "Dockerfile",
+        "sentry.client.config.ts"
+      ],
+      "steps": [
+        "Scaffold NextAuth credentials provider (disabled via env flag)",
+        "Add Prisma models for profiles/plans (SQLite/Postgres) behind flag",
+        "Integrate Sentry with DSN flag",
+        "Add Dockerfile(s) and docker-compose with simple services"
+      ],
+      "acceptance_criteria": [
+        "Each enhancement toggled by env flags",
+        "Docs specify how to enable/disable"
+      ]
+    },
+    {
+      "id": "testing",
+      "title": "Unit and E2E Testing",
+      "priority": "high",
+      "files_to_edit": [
+        "tests/backend/*",
+        "src/__tests__/*",
+        "e2e/*"
+      ],
+      "steps": [
+        "Pytest: BMR/TDEE math, 2+ edge cases per endpoint",
+        "Vitest/RTL: form validation, API hooks success/error",
+        "Playwright: full planner happy-path flow"
+      ],
+      "acceptance_criteria": [
+        "pytest -q passes",
+        "yarn test passes",
+        "Playwright suite passes locally"
+      ]
+    },
+    {
+      "id": "docs",
+      "title": "Documentation Update",
+      "priority": "medium",
+      "files_to_edit": [
+        "README.md",
+        "docs/CONTRIBUTING.md"
+      ],
+      "steps": [
+        "Add setup, run, and testing instructions",
+        "Document API contracts with request/response examples",
+        "Mini-guide: how to add a new diet type or meal source"
+      ],
+      "acceptance_criteria": [
+        "New dev can run app and tests in \u226410 minutes",
+        "API contracts are copy-pasteable examples"
+      ]
+    }
+  ],
+  "definition_of_done": [
+    "Multi-step flow works end-to-end with exports",
+    "Graceful error handling and fallbacks",
+    "Lighthouse \u2265 95, lint/typecheck/test green",
+    "README and env setup complete"
+  ],
+  "instructions_for_cursor": "Apply tasks in priority order. For each task, modify listed files, generate missing ones, ensure acceptance criteria, and run commands. Create PRs per task with descriptions linking back to this JSON task ID."
+}
