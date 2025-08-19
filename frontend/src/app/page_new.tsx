@@ -157,7 +157,7 @@ export default function Home() {
                   className="w-full"
                   variant="outline"
                 >
-                  🤖 Generate AI Descriptions
+                  Generate AI Descriptions
                 </Button>
                 <Button 
                   onClick={() => handleGenerateSwaps(0)}
