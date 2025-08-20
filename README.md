@@ -155,7 +155,7 @@ optibite/
 ├── simple_backend.py        # FastAPI backend server
 ├── requirements.txt         # Python dependencies
 ├── .env                     # Environment configuration
-└── README.md               # Project documentation
+└── README.md               
 ```
 
 ## Features in Detail
