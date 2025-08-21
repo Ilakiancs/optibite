@@ -91,8 +91,8 @@ OptiBite addresses the complexity of meal planning by integrating scientific nut
    # Create environment file in root directory
    cp env.example .env
    
-   # Edit .env with your OpenRouter API key
-   OPENROUTER_API_KEY=your_openrouter_api_key_here
+   # Edit .env with your OPENAI API key
+   OPENAI_API_KEY=your_openrouter_api_key_here
    USE_AI=true
    SITE_URL=http://localhost:3000
    SITE_NAME=OptiBite AI Meal Planner
