@@ -135,29 +135,6 @@ OptiBite addresses the complexity of meal planning by integrating scientific nut
 OPENROUTER_API_KEY=your_api_key_here
 USE_AI=true
 
-# Optional Configuration
-SITE_URL=http://localhost:3000
-SITE_NAME=OptiBite AI Meal Planner
-DEBUG=true
-```
-
-## Project Structure
-```
-optibite/
-├── frontend/                 # Next.js frontend application
-│   ├── src/
-│   │   ├── app/             # App router pages
-│   │   ├── components/      # React components
-│   │   ├── hooks/           # Custom React hooks
-│   │   └── lib/             # Utility functions
-│   ├── public/              # Static assets
-│   └── package.json         # Frontend dependencies
-├── simple_backend.py        # FastAPI backend server
-├── requirements.txt         # Python dependencies
-├── .env                     # Environment configuration
-└── README.md               
-```
-
 ## Features in Detail
 
 ### Meal Plan Generation
